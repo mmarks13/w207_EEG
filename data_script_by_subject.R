@@ -56,8 +56,10 @@ mini.dev.data <- train.data[sample.dev.vector,]
 mini.dev.events <- train.events[sample.dev.vector,]
 
 # Make dummy for no event
-mini.train.events$NoEvent <- 1 - rowSums(mini.train.events[2:7])
-mini.dev.events$NoEvent <- 1 - rowSums(mini.dev.events[2:7])
+mini.train.events$NoEvent <- rowSums(mini.train.events[2:7])
+mini.train.events$NoEvent <- ifelse(mini.train.events$NoEvent == 0,1,0)
+mini.dev.events$NoEvent <- rowSums(mini.dev.events[2:7])
+mini.dev.events$NoEvent <- ifelse(mini.dev.events$NoEvent == 0,1,0)
 
 # Create single outcome factor of events
 mini.train.data$outcome <- colnames(mini.train.events)[2:8][max.col(mini.train.events[,2:8])]
@@ -70,7 +72,7 @@ model <- multinom(outcome ~ ., data = mini.train.data[,-1])
 #Prediction report etc.
 predictions <- predict(model, newdata = mini.dev.data[,-1])
 predictions.correct <- predictions == mini.dev.data$outcome
-predict.df <- cbind(mini.dev.data$outcome,predictions, predictions.correct)
+predict.df <- cbind(predictions,mini.dev.data$outcome, predictions.correct)
 View(predict.df)
 
 # Percent correct is high, but only because NoEvent is so common
