@@ -8,7 +8,7 @@ library(lavaan)
 # Path to folder containing files
 folder.path <- "C:\\Users\\carson.GROUP5\\Dropbox\\MIDS\\Machine Learning\\Final\\KaggleTest\\train\\"
 
-#Make data file
+# Make data file
 path.first.file <- "C:\\Users\\carson.GROUP5\\Dropbox\\MIDS\\Machine Learning\\Final\\KaggleTest\\train\\subj1_series1_data.csv"
 
 # Load first file to get structure for appending
@@ -30,14 +30,12 @@ for(series in 1:8) {
 
 # Remove duplicate first row
 train.data <- master.train.data[-1,]
-#View(train.data)
 
 # Make events file
 path.first.file.events <- "C:\\Users\\carson.GROUP5\\Dropbox\\MIDS\\Machine Learning\\Final\\KaggleTest\\train\\subj1_series1_events.csv"
 
 master.train.events <- read.csv(path.first.file.events, header = T, stringsAsFactors = F)
 master.train.events <- master.train.events[1,]
-
 
 for(series in 1:8) {
   path.name <- paste0(folder.path,"subj","1","_","series",series,"_","events",".csv")
@@ -47,7 +45,6 @@ for(series in 1:8) {
 }
 
 train.events <- master.train.events[-1,]
-View(train.events)
 
 # Make random subsets
 sample.vector <- sample(nrow(train.data), 100000)
@@ -60,7 +57,7 @@ mini.dev.events <- train.events[sample.dev.vector,]
 
 # Make dummy for no event
 mini.train.events$NoEvent <- 1 - rowSums(mini.train.events[2:7])
-mini.dev.events$NoEvent <- 1 - rowSums(mini.train.events[2:7])
+mini.dev.events$NoEvent <- 1 - rowSums(mini.dev.events[2:7])
 
 # Create single outcome factor of events
 mini.train.data$outcome <- colnames(mini.train.events)[2:8][max.col(mini.train.events[,2:8])]
